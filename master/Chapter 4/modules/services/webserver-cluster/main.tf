@@ -12,6 +12,17 @@ provider "aws" {
     region = "us-east-1"
 }
 
+/* terraform {
+    backend "s3" {
+        bucket = "nec-registry"
+        key = "modules-test/terraform.tfstate"
+        region = "us-east-1"
+
+        dynamodb_table = "nec-tfstate-ddb"
+        encrypt = "true"
+    }
+} */
+
 resource "aws_launch_configuration" "example" {
   image_id        = "ami-0e472ba40eb589f49"
   instance_type   = var.instance_type
@@ -146,15 +157,15 @@ resource "aws_security_group_rule" "allow_all_outbound" {
   cidr_blocks = local.all_ips
 }
 
-data "terraform_remote_state" "db" {
+/*data "terraform_remote_state" "db" {
   backend = "s3"
-
+  workspace = "default"
   config = {
-    bucket = var.db_remote_state_bucket
-    key    = var.db_remote_state_key
+    bucket = "nec-registry"
+    key    = "modules-test/terraform.tfstate"
     region = "us-east-1"
   }
-}
+} */
 
 locals {
   http_port    = 80

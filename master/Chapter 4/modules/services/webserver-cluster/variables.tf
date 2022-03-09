@@ -19,6 +19,7 @@ variable "db_remote_state_key" {
   description = "The name of the key in the S3 bucket used for the database's remote state storage"
   type        = string
   default = "modules-test/terraform.tfstate"
+}
 
 variable "instance_type" {
   description = "The type of EC2 Instances to run (e.g. t2.micro)"
