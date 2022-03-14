@@ -6,7 +6,7 @@
 variable "db_password" {
   description = "The password for the database"
   type        = string
-  default = "Too1Shuk"
+  default     = "Too1Shuk"
 }
 
 # ---------------------------------------------------------------------------------------------------------------------

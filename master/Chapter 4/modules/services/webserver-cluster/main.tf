@@ -1,30 +1,15 @@
-terraform {
-    required_version = "1.1.5"
-  required_providers {
-    mycloud = {
-      source  = "aws"
-      version = "~> 4.3"
-    }
+data "aws_ami" "ami" {
+  most_recent = true
+  owners      = ["099720109477"]
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-bionic-18.04-amd64-server-*"]
   }
 }
 
-provider "aws" {
-    region = "us-east-1"
-}
-
-/* terraform {
-    backend "s3" {
-        bucket = "nec-registry"
-        key = "modules-test/terraform.tfstate"
-        region = "us-east-1"
-
-        dynamodb_table = "nec-tfstate-ddb"
-        encrypt = "true"
-    }
-} */
-
 resource "aws_launch_configuration" "example" {
-  image_id        = "ami-0e472ba40eb589f49"
+  image_id        = data.aws_ami.ami.id
   instance_type   = var.instance_type
   security_groups = [aws_security_group.instance.id]
   user_data       = data.template_file.user_data.rendered
@@ -84,9 +69,9 @@ resource "aws_lb" "example" {
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.example.arn
 
-  port              = local.http_port
+  port = local.http_port
 
-  protocol          = "HTTP"
+  protocol = "HTTP"
 
   # By default, return a simple 404 page
   default_action {
@@ -157,15 +142,14 @@ resource "aws_security_group_rule" "allow_all_outbound" {
   cidr_blocks = local.all_ips
 }
 
-/*data "terraform_remote_state" "db" {
+data "terraform_remote_state" "db" {
   backend = "s3"
-  workspace = "default"
   config = {
-    bucket = "nec-registry"
-    key    = "modules-test/terraform.tfstate"
+    bucket = var.db_remote_state_bucket
+    key    = var.db_remote_state_key
     region = "us-east-1"
   }
-} */
+}
 
 locals {
   http_port    = 80

@@ -1,23 +1,28 @@
 terraform {
-    required_version = "1.1.5"
+  required_version = "1.1.7"
   required_providers {
     mycloud = {
       source  = "aws"
       version = "~> 4.3"
     }
   }
+  backend "s3" {
+    bucket = "bjunker99-terraform-state"
+    key    = "project/chapter4"
+    region = "us-east-1"
+  }
 }
 
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
 }
 
 module "webserver_cluster" {
   source = "../../../modules/services/webserver-cluster"
 
-  cluster_name           = var.cluster_name
-  //db_remote_state_bucket = var.db_remote_state_bucket
-  //db_remote_state_key    = var.db_remote_state_key
+  cluster_name = var.cluster_name
+  db_remote_state_bucket = var.db_remote_state_bucket
+  db_remote_state_key    = var.db_remote_state_key
 
   instance_type = "t2.micro"
   min_size      = 2

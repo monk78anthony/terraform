@@ -1,5 +1,5 @@
 terraform {
-    required_version = "1.1.5"
+  required_version = "1.1.7"
   required_providers {
     mycloud = {
       source  = "aws"
@@ -9,18 +9,18 @@ terraform {
 }
 
 provider "aws" {
-    region = "us-east-1"
+  region = "us-east-1"
 }
 
 terraform {
-    backend "s3" {
-        bucket = "nec-registry"
-        key = "modules-dev/terraform.tfstate"
-        region = "us-east-1"
+  backend "s3" {
+    bucket = "bjunker99-terraform-state"
+    key    = "modules-dev/terraform.tfstate"
+    region = "us-east-1"
 
-        dynamodb_table = "nec-tfstate-ddb"
-        encrypt = "true"
-    }
+    #dynamodb_table = "nec-tfstate-ddb"
+    #encrypt        = "true"
+  }
 }
 
 resource "aws_db_instance" "example" {
